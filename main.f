@@ -1,3 +1,22 @@
+c Golden Ratio Simulated annealing (GRSA)
+c Copyright (C) 2020  Dr. Juan Paulo Sánchez Hernández, and Dr. Juan Frausto Solis
+c Copyright (C) 2005 Frank Eisenmenger, U.H.E. Hansmann, Shura Hayryan, Chin-Ku Hu
+
+c This program is free software; you can redistribute it and/or modify
+c it under the terms of the GNU General Public License as published by
+c the Free Software Foundation; either version 2 of the License, or (at
+c your option) any later version.
+c 
+c This program is distributed in the hope that it will be useful, but
+c WITHOUT ANY WARRANTY; without even the implied warranty of
+c MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+c General Public License for more details.
+c 
+c You should have received a copy of the GNU General Public License
+c along with this program; if not, write to the Free Software
+c Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+c USA.
+
 c **************************************************************
 c This file contains the:  main (SINGLE PROCESSOR JOBS ONLY,
 C                                FOR PARALLEL JOBS USE pmain)
@@ -26,7 +45,7 @@ c **************************************************************
       character grpn*4,grpc*4
       character(8) x1
       logical lrand,bgsposs
-	  real inicio,final,namefile1
+	  real initial,final,namefile1
  
 
 c      character*10 b(3)
@@ -106,17 +125,17 @@ c 2 => temperature dependent choice
 
 c ========================================  Add your task down here
  
-		call cpu_time(inicio)
-			call grsa(energia)
+		call cpu_time(initial)
+			call grsa(energy)
 		call cpu_time(final)
-      			total = final - inicio
+      			total = final - initial
 	
-	namefile1=energia*10000
+	namefile1=energy*10000
 	write(x1,'(I8)')  int(namefile1)
     
-      	write(*,*) 'ENERGIA ENCONTRADA',energia,total
-	open(16, file='./RESULTADOS/Energia'//x1//'.txt',status='new')
-	write(16,*) 'ENERGIA ENCONTRADA',energia,total
+      	write(*,*) 'ENERGY FOUND',energy,total
+	open(16, file='./RESULTS/ENERGY'//x1//'.txt',status='new')
+	write(16,*) 'ENERGY FOUND',energy,total
 	close (16)
 
 c ========================================  End of main      

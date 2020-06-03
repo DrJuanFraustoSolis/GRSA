@@ -1,11 +1,22 @@
-c *************axvr*************************************************
-c
-c This file contains the subroutines:  anneal
-c
-c Copyright 2003-2005  Frank Eisenmenger, U.H.E. Hansmann,
-c                      Shura Hayryan, Chin-Ku Hu
-c
-c **************************************************************
+c Golden Ratio Simulated annealing (GRSA)
+c Copyright (C) 2020  Dr. Juan Paulo Sánchez Hernández, and Dr. Juan Frausto Solis
+c Copyright (C) 2005 Frank Eisenmenger, U.H.E. Hansmann, Shura Hayryan, Chin-Ku Hu
+
+c This program is free software; you can redistribute it and/or modify
+c it under the terms of the GNU General Public License as published by
+c the Free Software Foundation; either version 2 of the License, or (at
+c your option) any later version.
+c 
+c This program is distributed in the hope that it will be useful, but
+c WITHOUT ANY WARRANTY; without even the implied warranty of
+c MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+c General Public License for more details.
+c 
+c You should have received a copy of the GNU General Public License
+c along with this program; if not, write to the Free Software
+c Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+c USA.
+
 
 c***********************GRSA************************************
 c
@@ -14,8 +25,8 @@ c  Golden Ratio Simulated annealing (GRSA)
 c -The GRSA has three fundamental parts: 1) The cooling scheme, 
 c  2) The overheating strategies, and 3) The convergence criteria
 c 
-c -The firts version was developed by Dr. Juan Paulo Sánchez Hernández,  
-c  Dr. Juan Frausto Solis, and Dr. Ernesto Liñan García 
+c -The firts version was developed by Dr. Juan Paulo Sánchez Hernández, 
+c and Dr. Juan Frausto Solis
 c  2015-2020
 c***************************************************************
 
