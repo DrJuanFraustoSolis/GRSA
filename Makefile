@@ -118,9 +118,9 @@ newpybind: $(FILES)
 	f2py -h smmp.pyf -m smmp only: ${pyInterface} : $(FILES)
 	./restoreexclpoint.py $(FILES)
 
-doc:
-	$(MAKE) -w -C doc/
-	doxygen pySMMP.doxygen
+#doc:
+#	$(MAKE) -w -C doc/
+#	doxygen pySMMP.doxygen
 	
 examples: $(PROG)
 	$(MAKE) -w -C EXAMPLES/

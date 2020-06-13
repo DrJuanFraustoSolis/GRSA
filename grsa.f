@@ -31,7 +31,7 @@ c  2015-2020
 c***************************************************************
 
 
-      subroutine  grsa(energia)
+      subroutine  grsa(g_energy)
 
 C --------------------------------------------------------------
 C PURPOSE: SIMULATED ANNEALING SEARCH OF LOWEST-POTENTIAL-ENERGY
@@ -51,11 +51,11 @@ C------------------------------------------
       character(8) x2
       logical lrand
       parameter(lrand=.true.)
-	logical bandera
-	logical bandera1
-	logical bandera2
-	logical bandera3
-	logical bandera4
+	logical flag
+	logical flag1
+	logical flag2
+	logical flag3
+	logical flag4
 
         dimension vlvrm(mxvr)
 	dimension idvrm(mxvr)
@@ -65,32 +65,27 @@ C------------------------------------------
 	dimension idvr_aux(mxvr)
 	dimension axvr_aux(mxvr)
 
-	real*8 energia,e,bangl
-	real inicio,final,total
-	real inicioT,namefile
-	integer seed1,p,THREADS,ID,MaxThreads
+	real*8 e,bangl
+c	real inicio,final,total
+	real initT,namefile
+c	integer seed1,p,THREADS,ID,MaxThreads
  	
-c	  integer time2
-c      character*10 a(3)
-c      integer datetime(8)
-c      character*50 name2      
-      
-        bandera = .true.
- 	bandera1 = .true.
- 	bandera2 = .true.
- 	bandera3 = .true.
- 	bandera4 = .true.
-	val_pen = 90.0d0
 
-c	seed=86456
-	paro_recta = 0.000000000001d0
-	recta = 0
+        flag = .true.
+ 	flag1 = .true.
+ 	flag2 = .true.
+ 	flag3 = .true.
+ 	flag4 = .true.
+	s_window = 90.0d0
+
+	s_slope = 0.000000000001d0
+	slope = 0
 	C = 0
 	D = 0
 	cnt = 1
 	cnt2 = 0
 
-	inicioT = secnds(0.0)
+	initT = secnds(0.0)
        nresi=irsml2(1)-irsml1(1) + 1     
 c ==================
 c == random start ==
@@ -99,7 +94,7 @@ c ==================
        if(lrand) then
         	do i=1,nvr
          	iv=idvr(i)  ! provides index of non-fixed variable
-        	 e = rand(int(inicioT))
+        	 e = rand(int(initT))
         	 dv=axvr(iv)*e
 	         vr=addang(pi,dv)
           	vlvr(iv)=vr
@@ -132,31 +127,24 @@ c ========== Parameters of Met-Enkephaline ==============
 c ====================================================	          
 
 	currtem = 226624331780759000000000000000000000.0d0 !Initial Temperature Met-enkephaline
-	paro = 0.00000014573301692707600 !Final Temperature Met-enkephaline
+	stop_temp = 0.00000014573301692707600 !Final Temperature Met-enkephaline
       
 
-	temp_aureo = currtem*0.618
-	temp_aureo1 = temp_aureo*0.618
-	temp_aureo2 = temp_aureo1*0.618
-	temp_aureo3 = temp_aureo2*0.618
-	temp_aureo4 = temp_aureo3*0.618
+	Tp0 = currtem*0.618
+	Tp1 = Tp0*0.618
+	Tp2 = Tp1*0.618
+	Tp3 = Tp2*0.618
+	Tp4 = Tp3*0.618
 
-        alfa = 0.70
+        alpha = 0.70
 	blmax = 360.0d0
 	bbeta = 1.00067911076425 !
 
-	temp1=1.9E-4
-  	ban1=1
-	ban2=1
-	ban3=1
-	ban4=1
-	band5=1
-	band6=1	
-	band7=1
+	
 c =================================
 c == Start the Simulated Annealing == 
 c =================================
-      do while(currtem.GE.paro)
+      do while(currtem.GE.stop_temp)
         propon = 0.0d0
         acepta = 0.0d0
         ycurr = 0.0d0
@@ -197,24 +185,24 @@ c==================================================
 c   The convergence criteria for dynamic equilibrium
 c==================================================
 
-			if ((currtem.LT.val_pen).AND. (cnt.LT.3)) then
+			if ((currtem.LT.s_window).AND. (cnt.LT.3)) then
 				D = D + ymin
 				C = C + cnt * ymin
 				cnt = cnt + 1
 			end if
 
 			if (cnt.EQ.3) then
-		        recta = (((12 * C)-(6*(cnt-1)*D))/(cnt**3 - cnt))	
+		        slope = (((12 * C)-(6*(cnt-1)*D))/(cnt**3 - cnt))	
 			cnt = 1	
 
-			 if (recta.LT.paro_recta) then
+			 if (slope.LT.s_slope) then
 c----------------------------Overheating strategy-------------------------------------------
 				currtem = currtem*0.618
 				bangl= bangl+1
 		         endif		
 			
 			  if (bangl.EQ.2) then
-				currtem = paro
+				currtem = stop_temp
 			  endif
 
 			endif
@@ -228,27 +216,27 @@ c ========================
 c ==============================
 c == Lower the Temperature ==
 c ==============================
-        currtem = alfa * currtem
+        currtem = alpha * currtem
 	write(*,*) currtem,ymin
 c ==============================
 c Cooling Scheme by golden ratio
 c ==============================
 
-	if ((currtem.LT.temp_aureo).AND. (bandera)) then
-		alfa = 0.75d0
-		bandera = .false.
-	else if ((currtem.LT.temp_aureo1).AND. (bandera1)) then
-		alfa = 0.80d0
-		bandera1 = .false.
-	else if ((currtem.LT.temp_aureo2).AND. (bandera2)) then
-		alfa = 0.85d0
-		bandera2 = .false.
-	else if ((currtem.LT.temp_aureo3).AND. (bandera3)) then
-		alfa = 0.90d0
-		bandera3 = .false.
-	else if ((currtem.LT.temp_aureo4).AND. (bandera4)) then
-		alfa = 0.95d0
-		bandera4 = .false.
+	if ((currtem.LT.Tp0).AND. (flag)) then
+		alpha = 0.75d0
+		flag = .false.
+	else if ((currtem.LT.Tp1).AND. (flag1)) then
+		alpha = 0.80d0
+		flag1 = .false.
+	else if ((currtem.LT.Tp2).AND. (flag2)) then
+		alpha = 0.85d0
+		flag2 = .false.
+	else if ((currtem.LT.Tp3).AND. (flag3)) then
+		alpha = 0.90d0
+		flag3 = .false.
+	else if ((currtem.LT.Tp4).AND. (flag4)) then
+		alpha = 0.95d0
+		flag4 = .false.
 c--------------------Overheating strategy-------------------------------------------------
 		currtem = currtem+currtem
 	endif
@@ -259,16 +247,16 @@ c ==============================
         blmax = bbeta * blmax
 
       enddo
-	energia = ymin
+	g_energy = ymin
 c ====================================
 c == End of the Simulated Annealing ==
 c ====================================
-	  namefile=energia*10000
+	  namefile=g_energy*10000
 	  write(x2,'(I8)') int(namefile) 
-	  open(17, file='./RESULTADOS/deltas'//x2//'.txt',status='new')
-	  write(17,*) 'Delta min y max',deltamin,deltamax	
-          open(16, file='./RESULTADOS/Estruc'//x2//'.pdb',status='new')	  
-	  close(17)
+C	  open(17, file='./RESULTS/deltas'//x2//'.txt',status='new')
+C	  write(17,*) 'Delta min y max',deltamin,deltamax	
+          open(16, file='./RESULTS/Estruc'//x2//'.pdb',status='new')	  
+C	  close(17)
 c =======================================================
 c == Write start configuration in pdb-format into file ==
 c =======================================================

@@ -126,16 +126,16 @@ c 2 => temperature dependent choice
 c ========================================  Add your task down here
  
 		call cpu_time(initial)
-			call grsa(energy)
+			call grsa(g_energy)
 		call cpu_time(final)
       			total = final - initial
 	
-	namefile1=energy*10000
+	namefile1=g_energy*10000
 	write(x1,'(I8)')  int(namefile1)
     
-      	write(*,*) 'ENERGY FOUND',energy,total
+      	write(*,*) 'ENERGY FOUND',g_energy,total
 	open(16, file='./RESULTS/ENERGY'//x1//'.txt',status='new')
-	write(16,*) 'ENERGY FOUND',energy,total
+	write(16,*) 'ENERGY FOUND',g_energy,total
 	close (16)
 
 c ========================================  End of main      
